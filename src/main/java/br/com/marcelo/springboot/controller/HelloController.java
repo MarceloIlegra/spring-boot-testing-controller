@@ -50,9 +50,8 @@ public class HelloController {
     public ResponseEntity findOne(@RequestParam Integer id){
         List<Language> languages = Arrays.asList(new Language(1, "Java"), new Language(2, "Scala"), new Language(3, "Ruby"));
         Optional<Language> languageOptional = languages.stream().filter((language)->language.getId() == id).findFirst();
-        return languageOptional.isPresent()
-                ? new ResponseEntity(languageOptional.get(), HttpStatus.OK)
-                : new ResponseEntity("Not found...", HttpStatus.BAD_REQUEST);
+        return languageOptional.map( language -> new ResponseEntity(language, HttpStatus.OK))
+                .orElse(new ResponseEntity("Not found...", HttpStatus.BAD_REQUEST));
     }
 
     @RequestMapping(value="calculateAge", method=RequestMethod.POST)
